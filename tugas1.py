@@ -6,6 +6,11 @@ def shift_left(bits, n):
     # Geser bit ke kiri, dengan wrapping untuk bit yang keluar
     return ((bits << n) & 0xF) | ((bits >> (4 - n)) & 0xF)
 
+# Fungsi untuk mengonversi biner ke heksadesimal
+def bin_to_hex(binary_str):
+    hex_str = hex(int(binary_str, 2))[2:].upper()
+    return hex_str
+
 # Fungsi enkripsi ECB
 def xor_encrypt_ecb(plaintext, key):
     ciphertext = ""
@@ -21,9 +26,11 @@ def xor_encrypt_ecb(plaintext, key):
         encrypted_block = block_int ^ key
         # Geser 1 bit ke kiri
         encrypted_block = shift_left(encrypted_block, 1)
-        # Konversi kembali ke string biner dan tambahkan ke ciphertext
+        # Konversi ke string biner 4 bit dan tambahkan ke ciphertext
         ciphertext += format(encrypted_block, '04b')
-    return ciphertext
+    
+    # Mengonversi hasil enkripsi ke heksadesimal
+    return bin_to_hex(ciphertext)
 
 # Fungsi enkripsi CBC
 def xor_encrypt_cbc(plaintext, key, iv):
@@ -43,11 +50,13 @@ def xor_encrypt_cbc(plaintext, key, iv):
         encrypted_block = xor_block ^ key
         # Geser 1 bit ke kiri
         encrypted_block = shift_left(encrypted_block, 1)
-        # Konversi kembali ke string biner dan tambahkan ke ciphertext
+        # Konversi ke string biner 4 bit dan tambahkan ke ciphertext
         ciphertext += format(encrypted_block, '04b')
         # Update blok sebelumnya
         prev_block = encrypted_block
-    return ciphertext
+    
+    # Mengonversi hasil enkripsi ke heksadesimal
+    return bin_to_hex(ciphertext)
 
 # Fungsi yang dipanggil saat tombol enkripsi ditekan
 def encrypt():
@@ -96,7 +105,7 @@ button_encrypt.grid(row=4, columnspan=2, pady=10)
 
 # Output ciphertext
 output_ciphertext = tk.StringVar()
-tk.Label(window, text="Ciphertext:").grid(row=5, column=0, padx=5, pady=5, sticky="e")
+tk.Label(window, text="Ciphertext (hexa):").grid(row=5, column=0, padx=5, pady=5, sticky="e")
 tk.Entry(window, textvariable=output_ciphertext, state='readonly').grid(row=5, column=1, padx=5, pady=5)
 
 # Jalankan UI
